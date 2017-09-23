@@ -1,38 +1,49 @@
 <template>
     <div class="container">
-        <div class="row">
-            <div class="col-xs-12">
-                <br>
-                <button class="btn btn-primary" @click="selectedComponent = 'appBlue'">Load Blue Template</button>
-                <button class="btn btn-success" @click="selectedComponent = 'appGreen'">Load Green Template</button>
-                <button class="btn btn-danger" @click="selectedComponent = 'appRed'">Load Red Template</button>
-                <hr>
-                <keep-alive>
-                  <component :is="selectedComponent">Some Content</component>
-                </keep-alive>
-            </div>
+      <app-progress :quoteCount="quotes.length" :maxQuotes="maxQuotes"></app-progress>
+      <new-quote @quoteAdded="addQuote"></new-quote>
+      <quote-container :quotes="quotes" @quoteDeleted="deleteQuote"></quote-container>
+      <div class="row">
+        <div class="col-sm-12 text-center">
+          <div class="alert alert-info">
+            Info: Click on the quote to delete it!
+          </div>
         </div>
+      </div>
     </div>
 </template>
 
 <script>
-    import Blue from './components/Blue.vue';
-    import Green from './components/Green.vue';
-    import Red from './components/Red.vue';
+  import Progress from './components/Progress.vue'
+  import NewQuote from './components/NewQuote.vue'
+  import QuoteContainer from './components/QuoteContainer.vue'
 
-    export default {
-        data() {
-          return {
-            selectedComponent: "appBlue"
-          }
-        },
-        components: {
-            appBlue: Blue,
-            appGreen: Green,
-            appRed: Red
+  export default {
+    components: {
+      'app-progress': Progress,
+      'new-quote': NewQuote,
+      'quote-container': QuoteContainer,
+    },
+    data() {
+      return {
+        quotes: ['Some words that might represent a quote.'],
+        maxQuotes: 10,
+      }
+    },
+    methods: {
+      addQuote(quote) {
+        if (this.quotes.length >= this.maxQuotes) {
+          alert("Max limit reached, delete a quote to add another.")
+          return
         }
+        this.quotes.push(quote);
+      },
+      deleteQuote(index) {
+        this.quotes.splice(index, 1);
+      }
     }
+  }
 </script>
 
-<style>
+<style scoped>
 </style>
